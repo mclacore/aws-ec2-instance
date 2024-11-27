@@ -1,7 +1,0 @@
-{
-    "$id": "https://schemas.massdriver.cloud/schemas/bundles/aws-ec2-instance/schema-artifacts.json",
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "description": "test aws ec2 instance",
-    "properties": {},
-    "title": "aws-ec2-instance"
-}
