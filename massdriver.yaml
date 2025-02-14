@@ -3,11 +3,16 @@ name: aws-ec2-instance
 description: test aws ec2 instance
 source_url: github.com/YOUR_NAME_HERE/aws-ec2-instance
 access: private
-type: infrastructure
+type: application
 
 steps:
   - path: src
     provisioner: opentofu
+
+app:
+  env: {}
+  policies: []
+  secret: {}
 
 params:
   examples: []

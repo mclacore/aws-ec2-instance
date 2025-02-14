@@ -51,20 +51,6 @@ variable "vpc" {
   })
 }
 // Auto-generated variable declarations from massdriver.yaml
-variable "ami" {
-  type = string
-}
-variable "enable_ssh" {
-  type = bool
-}
-variable "instance_type" {
-  type = string
-}
-variable "user_data" {
-  type    = string
-  default = null
-}
-// Auto-generated variable declarations from massdriver.yaml
 variable "aws_authentication" {
   type = object({
     data = object({
@@ -74,28 +60,6 @@ variable "aws_authentication" {
     specs = object({
       aws = optional(object({
         region = optional(string)
-      }))
-    })
-  })
-}
-// Auto-generated variable declarations from massdriver.yaml
-variable "cdn" {
-  type = object({
-    data = object({
-      infrastructure = object({
-        ari = string
-        endpoints = list(object({
-          hostname = optional(string)
-          name     = optional(string)
-        }))
-      })
-      security = object({
-        iam = optional(any)
-      })
-    })
-    specs = object({
-      azure = optional(object({
-        region = string
       }))
     })
   })

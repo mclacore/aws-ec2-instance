@@ -21,21 +21,25 @@ locals {
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
+    "RDP" = {
+      type        = "ingress"
+      from_port   = 3389
+      to_port     = 3389
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 }
 
 resource "aws_launch_template" "main" {
-  name_prefix   = var.md_metadata.name_prefix
-  image_id      = "ami-0453ec754f44f9a4a"
-  instance_type = "t2.micro"
-
-  key_name = aws_key_pair.ssh.key_name
-
-  network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = [aws_security_group.main.id]
-  }
-
+  image_id      = "ami-0aa117785d1c1bfe5"
+  #   instance_type = "t2.micro"
+  #
+  #   network_interfaces {
+  #     associate_public_ip_address = true
+  #     security_groups             = ["sg-06f3048b18a86b228"]
+  #   }
+  #
   lifecycle {
     ignore_changes = [image_id]
   }
@@ -44,23 +48,22 @@ resource "aws_launch_template" "main" {
 resource "aws_instance" "main" {
   launch_template {
     id      = aws_launch_template.main.id
-    version = "$Latest"
+    version = aws_launch_template.main.default_version
   }
-  subnet_id = element(split("/", var.vpc.data.infrastructure.private_subnets[0].arn), 1)
+  subnet_id = "subnet-03a25e384bab374ab"
 
   tags = {
     Name = var.md_metadata.name_prefix
   }
 
   lifecycle {
+    ignore_changes        = [launch_template[0].version]
     create_before_destroy = true
   }
 }
 
 resource "aws_security_group" "main" {
-  name        = "${var.md_metadata.name_prefix}-web-service"
-  description = "Web service security group"
-  vpc_id      = element(split("/", var.vpc.data.infrastructure.arn), 1)
+  description = "default VPC security group"
 }
 
 resource "aws_security_group_rule" "main" {
@@ -75,12 +78,3 @@ resource "aws_security_group_rule" "main" {
   cidr_blocks       = each.value.cidr_blocks
 }
 
-resource "tls_private_key" "ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "ssh" {
-  key_name   = "${var.md_metadata.name_prefix}-ssh-key"
-  public_key = tls_private_key.ssh.public_key_openssh
-}
